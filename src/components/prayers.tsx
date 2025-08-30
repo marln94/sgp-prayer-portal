@@ -1,7 +1,7 @@
 "use client";
 
 import { Prayer } from "../app/types";
-import { use, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2Icon, ClipboardIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
@@ -30,7 +30,7 @@ export default function Prayers({
     if (result.success) {
       setPrayers(result.data)
     } else {
-      toast.error(result.error)
+      toast.error(result.error as string)
     }
 
     // setIsLoading(false)

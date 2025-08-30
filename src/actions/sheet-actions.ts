@@ -22,8 +22,9 @@ export async function getPrayersToAssign() {
         return {
             success: true, data: mappedPrayers
         }
-    } catch (error: any) {
-        return { success: false, error: error.message, data: [] }
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : error
+        return { success: false, error: message, data: [] }
     }
 }
 
@@ -43,7 +44,8 @@ export async function markAssignedPrayers(prayerIds: string[]) {
         });
 
         return { success: true, data: {} }
-    } catch (error: any) {
-        return { success: false, error: error.message }
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : error
+        return { success: false, error: message, data: [] }
     }
 }

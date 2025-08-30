@@ -20,8 +20,8 @@ export default async function Home() {
     });
     const sheets = google.sheets({ version: "v4", auth });
     const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SHEET_ID,
-      range: process.env.SHEET_RANGE,
+      spreadsheetId: process.env.SGP_SHEETS_ID,
+      range: process.env.ASSIGN_SHEET_RANGE,
     });
     if (
       response.data.values?.length === 2 &&

@@ -10,17 +10,31 @@ import Loading from "@/app/loading";
 
 import Categories from "./categories";
 
+import { getPrayersToAssign, markAssignedPrayers } from "@/actions/sheet-actions";
+
+interface Props {
+  initialPrayers: Prayer[]
+}
+
 export default function Prayers({
-  prayersPromise,
-  markAssignedPrayers,
-  fetchPrayers,
-}: {
-  prayersPromise: Promise<Prayer[]>;
-  markAssignedPrayers: (prayerIds: string[]) => Promise<void>;
-  fetchPrayers: () => Promise<Prayer[]>;
-}) {
-  const [prayers, setPrayers] = useState(use(prayersPromise));
+  initialPrayers
+}: Props) {
+  const [prayers, setPrayers] = useState(initialPrayers);
   const [isLoading, setIsLoading] = useState(false);
+
+  const refreshPrayers = async () => {
+    // setIsLoading(true)
+
+    const result = await getPrayersToAssign()
+
+    if (result.success) {
+      setPrayers(result.data)
+    } else {
+      toast.error(result.error)
+    }
+
+    // setIsLoading(false)
+  }
 
   const groupPrayers = (prayers: Prayer[]) => {
     return prayers.reduce((acc, prayer) => {
@@ -62,8 +76,7 @@ export default function Prayers({
     copyToClipboard(checkedTexts);
 
     await markAssignedPrayers(checkedPrayers.map((p) => String(p.id)));
-    const freshPrayers = await fetchPrayers();
-    setPrayers(freshPrayers);
+    await refreshPrayers();
 
     setIsLoading(false);
     toast.success("Peticiones copiadas al portapapeles", {

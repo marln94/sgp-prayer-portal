@@ -22,18 +22,21 @@ export default function Prayers({
   const [prayers, setPrayers] = useState(initialPrayers);
   const [isLoading, setIsLoading] = useState(false);
 
-  const refreshPrayers = async () => {
-    // setIsLoading(true)
-
-    const result = await getPrayersToAssign()
-
-    if (result.success) {
-      setPrayers(result.data)
-    } else {
-      toast.error(result.error as string)
+  const loadPrayers = async () => {
+    // setLoading(true)
+    // setError(null)
+    
+    try {
+      const result = await getPrayersToAssign()
+      
+      if (result.success) {
+        setPrayers(result.data)
+      } else {
+        setError(result.error)
+      }
+    } catch (err) {
+      toast.error('Error al cargar peticiones')
     }
-
-    // setIsLoading(false)
   }
 
   const groupPrayers = (prayers: Prayer[]) => {
@@ -76,7 +79,7 @@ export default function Prayers({
     copyToClipboard(checkedTexts);
 
     await markAssignedPrayers(checkedPrayers.map((p) => String(p.id)));
-    await refreshPrayers();
+    await loadPrayers();
 
     setIsLoading(false);
     toast.success("Peticiones copiadas al portapapeles", {
@@ -85,6 +88,10 @@ export default function Prayers({
       description: "Puedes pegarlas en Whatsapp y enviarlas al orador.",
     });
   };
+
+  useEffect(() => {
+    loadPrayers()
+  }, [])
 
   if (prayers.length === 0) {
     return <h2>No hay peticiones</h2>;

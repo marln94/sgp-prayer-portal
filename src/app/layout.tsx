@@ -15,6 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <title>Portal de Peticiones de Oración</title>
       <body className={`antialiased @container/main`}>
         <SiteHeader />
         <main className="">{children}</main>

@@ -16,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <title>Portal de Peticiones de Oración</title>
+      <meta name="description" content="Portal de Peticiones del Departamento de Oración Fe y Esperanza" />
       <body className={`antialiased @container/main`}>
         <SiteHeader />
         <main className="">{children}</main>

@@ -1,43 +1,44 @@
 "use client";
 
 import { Prayer } from "../app/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2Icon, ClipboardIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-import Loading from "@/app/loading";
+import Loading from "@/components/loading";
 
 import Categories from "./categories";
 
-import { getPrayersToAssign, markAssignedPrayers } from "@/actions/sheet-actions";
+import {
+  getPrayersToAssign,
+  markAssignedPrayers,
+} from "@/actions/sheet-actions";
 
-interface Props {
-  initialPrayers: Prayer[]
-}
-
-export default function Prayers({
-  initialPrayers
-}: Props) {
-  const [prayers, setPrayers] = useState(initialPrayers);
+export default function Prayers() {
+  const [prayers, setPrayers] = useState<Prayer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadPrayers = async () => {
-    // setLoading(true)
-    // setError(null)
-    
-    try {
-      const result = await getPrayersToAssign()
-      
-      if (result.success) {
-        setPrayers(result.data)
-      } else {
-        setError(result.error)
-      }
-    } catch (err) {
-      toast.error('Error al cargar peticiones')
+  const loadPrayers = async (showLoading = true) => {
+    if (showLoading) {
+      setIsLoading(true);
     }
-  }
+    try {
+      const result = await getPrayersToAssign();
+
+      if (result.success) {
+        setPrayers(result.data);
+      } else {
+        toast.error(result.error as string);
+      }
+    } catch {
+      toast.error("Error al cargar peticiones");
+    } finally {
+      if (showLoading) {
+        setIsLoading(false);
+      }
+    }
+  };
 
   const groupPrayers = (prayers: Prayer[]) => {
     return prayers.reduce((acc, prayer) => {
@@ -79,7 +80,7 @@ export default function Prayers({
     copyToClipboard(checkedTexts);
 
     await markAssignedPrayers(checkedPrayers.map((p) => String(p.id)));
-    await loadPrayers();
+    await loadPrayers(false);
 
     setIsLoading(false);
     toast.success("Peticiones copiadas al portapapeles", {
@@ -90,12 +91,8 @@ export default function Prayers({
   };
 
   useEffect(() => {
-    loadPrayers()
-  }, [])
-
-  if (prayers.length === 0) {
-    return <h2>No hay peticiones</h2>;
-  }
+    loadPrayers();
+  }, []);
 
   return (
     <div>

@@ -70,6 +70,8 @@ export default function Prayers() {
       return;
     }
 
+    const total = checkedPrayers.length;
+
     setIsLoading(true);
     const checkedTexts = Object.entries(groupPrayers(checkedPrayers))
       .map(
@@ -83,10 +85,10 @@ export default function Prayers() {
     await loadPrayers(false);
 
     setIsLoading(false);
-    toast.success("Peticiones copiadas al portapapeles", {
+    toast.success(`Se copiaron ${total} peticiones`, {
       icon: <CheckCircle2Icon className="text-green-500" />,
       duration: 8000,
-      description: <span className="text-stone-500">Puedes pegarlas en Whatsapp y enviarlas al orador.</span>,
+      description: <span className="text-stone-500 italic">Estas se eliminan de la lista automáticamente</span>,
     });
   };
 

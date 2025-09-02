@@ -86,7 +86,7 @@ export default function Prayers() {
     toast.success("Peticiones copiadas al portapapeles", {
       icon: <CheckCircle2Icon className="text-green-500" />,
       duration: 8000,
-      description: "Puedes pegarlas en Whatsapp y enviarlas al orador.",
+      description: <span className="text-stone-500">Puedes pegarlas en Whatsapp y enviarlas al orador.</span>,
     });
   };
 
